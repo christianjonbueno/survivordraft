@@ -63,13 +63,24 @@ export default function Dashboard() {
                       seasonId: season.id
                     }
                   }}
-                  className="btn btn-success w-100 mt-1"
+                  className="btn btn-secondary w-100 mt-1"
                   key={season.season}
                   >
                   {season.season}
                   </Link>
                 } else {
-                  return <>Hello</>
+                  return <Link to={{
+                    pathname: "/seasonDraft",
+                    state: {
+                      seasonNum: season.season,
+                      seasonId: season.id
+                    }
+                  }}
+                  className="btn btn-success w-100 mt-1"
+                  key={season.season}
+                  >
+                  {season.season}
+                  </Link>
                 }
 
               })}

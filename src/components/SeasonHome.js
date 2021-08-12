@@ -102,7 +102,7 @@ export default function SeasonHome() {
       ):(
         <Card>
           <Card.Header><h1 className="text-center">Season {seasonNum} has begun</h1></Card.Header>
-          <Link to="/" className="btn btn-primary w-100 mt-3">Go to Season {seasonNum}</Link>
+          <Link to="/seasonDraft" className="btn btn-primary w-100 mt-3">Go to Season {seasonNum}</Link>
         </Card>
       )}
         <div className="w-100 text-center mt-2">
