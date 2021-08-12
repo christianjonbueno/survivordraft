@@ -22,8 +22,7 @@ export function AuthProvider({ children }) {
         const uid = user.user.uid
         // Build a reference to their per-user document in the
         // users collection
-        const userDocRef = firebase.firestore()
-            .collection('users').doc(uid)
+        const userDocRef = firebase.firestore().collection('users').doc(uid)
         // Add some initial data to it
         const snapshot = await firebase.firestore().collection('seasons').get();
         const seasonsMap = snapshot.docs.map(doc => doc.data());
@@ -33,18 +32,18 @@ export function AuthProvider({ children }) {
 
         const res = seasonsList.reduce((acc,curr)=> (acc[curr] = false, acc), {});
         console.log(res)
-        const docToUpdate = {
-          username: username,
-          joinedSeason: false,
-          season: res
-        }
-
-        await userDocRef.set(docToUpdate)
         // grab the url of the recently uploaded image
         storageRef.child(image.name).getDownloadURL()
-          .then((url) => {
-            // update the profile of the newly created user's photoURL to that of the uploaded image
-            let currUse = firebase.auth().currentUser;
+        .then(async (url) => {
+          // update the profile of the newly created user's photoURL to that of the uploaded image
+          const docToUpdate = {
+            username: username,
+            season: res,
+            photoURL: url
+          }
+  
+          await userDocRef.set(docToUpdate)
+          let currUse = firebase.auth().currentUser;
             currUse.updateProfile({
               displayName: username,
               photoURL: url
@@ -82,8 +81,13 @@ export function AuthProvider({ children }) {
       .collection("users")
       .doc(currUse.uid)
       .update({
-        season: { [seasonNum]: true }
+        [`season.${seasonNum}`]: true
       });
+  }
+
+  async function beginSeason(seasonId) {
+    const seasonDocRef = await firebase.firestore().collection('seasons').doc(seasonId);
+    await seasonDocRef.update({started: true});
   }
 
   useEffect(() => {
@@ -103,7 +107,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmail,
     updatePassword,
-    updateSeasonStatus
+    updateSeasonStatus,
+    beginSeason
   }
   return (
     <AuthContext.Provider value={value}>

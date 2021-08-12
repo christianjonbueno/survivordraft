@@ -6,6 +6,7 @@ import firebase from '../firebase.js';
 
 export default function Dashboard() {
   const [seasons, setSeasons] = useState([]);
+  console.log(seasons)
   const [error, setError] = useState('');
   const { currentUser, logout } = useAuth();
   const history = useHistory();
@@ -25,7 +26,13 @@ export default function Dashboard() {
     const db = firebase.firestore();
     const getSeasons = async () => {
       const data = await db.collection('seasons').get();
-      setSeasons(data.docs.map(doc => doc.data()));
+      let seasonData = [];
+      data.docs.forEach((seasonDoc) => {
+        let obj = seasonDoc.data();
+        obj.id = seasonDoc.id;
+        seasonData.push(obj)
+      })
+      setSeasons(seasonData);
     }
     getSeasons();
     // figure out how to render name + photo after login
@@ -48,17 +55,23 @@ export default function Dashboard() {
           <Card.Body>
             <h2 className="text-center mb-4">Survivor seasons:</h2>
               {seasons.map(season => {
-                return <Link to={{
-                  pathname: "/seasonHome",
-                  state: {
-                    seasonNum: season.season
-                  }
-                }}
-                className="btn btn-success w-100 mt-1"
-                key={season.season}
-                >
-                {season.season}
-                </Link>
+                if (!season.started) {
+                  return <Link to={{
+                    pathname: "/seasonHome",
+                    state: {
+                      seasonNum: season.season,
+                      seasonId: season.id
+                    }
+                  }}
+                  className="btn btn-success w-100 mt-1"
+                  key={season.season}
+                  >
+                  {season.season}
+                  </Link>
+                } else {
+                  return <>Hello</>
+                }
+
               })}
           </Card.Body>
       </Card>
