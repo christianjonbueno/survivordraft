@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Alert } from 'react-bootstrap';
+import { Card, Button, Alert, CardColumns } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import firebase from '../firebase.js';
@@ -12,13 +12,14 @@ export default function SeasonDraft() {
   const [currentDoc, setCurrentDoc] = useState('');
   const [joinedUsers, setJoinedUsers] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
-  console.log(allPlayers)
+  const [tribes, setTribes] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
   const history = useHistory();
   const db = firebase.firestore();
 
   async function handleLogout() {
     setError('');
-    
+
     try {
       await logout();
       history.push('/login');
@@ -46,7 +47,7 @@ export default function SeasonDraft() {
 
   async function getPlayers() {
     let players = [];
-    const allDocs = await db.collection('players').get()
+    const allDocs = await db.collection('players').get();
     allDocs.forEach(doc => {
       let obj = doc.data();
       obj.id = doc.id;
@@ -54,11 +55,23 @@ export default function SeasonDraft() {
     });
     setAllPlayers(players);
   }
+
+  async function getTribes() {
+    let tribes = [];
+    const allDocs = await db.collection('tribes').get();
+    allDocs.forEach(doc => {
+      let obj = doc.data();
+      obj.id = doc.id;
+      tribes.push(obj);
+    });
+    setTribes(tribes);
+  }
  
   useEffect(() => {
     getUser();
     getAllUsers();
     getPlayers();
+    getTribes();
   }, [])
 
   return (
@@ -66,9 +79,27 @@ export default function SeasonDraft() {
       <Card>
           <Card.Header><h1 className="text-center">Season {seasonNum}</h1></Card.Header>
           <Card.Body className="text-center">
-            {error && <Alert variant="danger">{error}</Alert>}
-              <Card.Text className="text-center">Test</Card.Text>
-            <br />
+            <Card.Title className="text-center bold">Tribes</Card.Title>
+
+            <CardColumns>
+            {tribes.map(tribe => {
+            // return 
+            // <Card.Text className="text-center" key={player.id}>{player.name}</Card.Text>
+              return <Card 
+                key={tribe.tribe_name} 
+                variant="primary"
+                bg={tribe.color}
+              >
+                <Card.Img variant="top" src={tribe.img} />
+                <Card.Body>
+                  <Card.Title>{tribe.tribe_name} Tribe</Card.Title>
+                  <Card.Text>
+                    Meet the players of {tribe.tribe_name}.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            })}
+            </CardColumns>
           <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
           </Card.Body>
       </Card>
