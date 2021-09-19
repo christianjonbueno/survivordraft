@@ -10,6 +10,7 @@ import ForgotPassword from './ForgotPassword';
 import UpdateProfile from './UpdateProfile';
 import SeasonHome from './SeasonHome';
 import SeasonDraft from './SeasonDraft';
+import Players from './Players';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                 <PrivateRoute path="/update-profile" component={UpdateProfile} />
                 <PrivateRoute path="/seasonHome" component={SeasonHome} />
                 <PrivateRoute path="/seasonDraft" component={SeasonDraft} />
+                <PrivateRoute path="/players" component={Players} />
                 <Route path="/signup" component={Signup} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgot-password" component={ForgotPassword} />

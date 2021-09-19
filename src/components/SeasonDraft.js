@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Alert, CardColumns } from 'react-bootstrap';
+import { Card, Button, CardColumns } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import firebase from '../firebase.js';
@@ -88,22 +88,35 @@ export default function SeasonDraft() {
               return <Card 
                 key={tribe.tribe_name} 
                 variant="primary"
-                bg={tribe.color}
+                style={{marginBottom: "1rem", backgroundColor: tribe.hex}}
               >
+              <Link 
+                to={{
+                  pathname: "/players",
+                  state: {
+                    seasonNum,
+                    tribe_id: tribe.id,
+                    tribe_name: tribe.tribe_name,
+                    tribe_color: tribe.color,
+                    tribe_hex: tribe.hex
+                  }
+                }}
+                className="btn w-100 mt-3"
+                style={{color: "white"}}
+                >
                 <Card.Img variant="top" src={tribe.img} />
                 <Card.Body>
                   <Card.Title>{tribe.tribe_name} Tribe</Card.Title>
-                  <Card.Text>
-                    Meet the players of {tribe.tribe_name}.
-                  </Card.Text>
+                      Meet the players of {tribe.tribe_name}
                 </Card.Body>
+                </Link>
               </Card>
             })}
             </CardColumns>
-          <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
           </Card.Body>
       </Card>
         <div className="w-100 text-center mt-2">
+          <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
           <Button variant="link" onClick={handleLogout}>Log Out</Button>
         </div>
     </div>
