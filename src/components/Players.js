@@ -128,9 +128,9 @@ export default function Players() {
                       <ListGroupItem>Idols: {clickedPlayer.idols}</ListGroupItem>
                     </ListGroup>
                   </Card.Body>
-                  <Card.Body className="text-center">
+                  <Card.Footer className="text-center">
                     <Button variant="secondary" onClick={() => showPopup()}>Close</Button>
-                  </Card.Body>
+                  </Card.Footer>
                 </Card>
               </FadeIn>
               )}

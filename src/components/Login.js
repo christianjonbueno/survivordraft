@@ -29,6 +29,7 @@ export default function Login() {
   return (
     <div>
       <Card>
+        <Card.Img src="https://i.imgur.com/q1RJB9p.jpg"></Card.Img>
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
           {error && <Alert variant="danger">{error}</Alert>}

@@ -6,7 +6,6 @@ import firebase from '../firebase.js';
 
 export default function Dashboard() {
   const [seasons, setSeasons] = useState([]);
-  console.log(seasons)
   const [error, setError] = useState('');
   const { currentUser, logout } = useAuth();
   const history = useHistory();
@@ -79,7 +78,8 @@ export default function Dashboard() {
                   className="btn btn-success w-100 mt-1"
                   key={season.season}
                   >
-                  {season.season}
+                  <img src={season.icon}></img>
+                  {' '} Season {season.season}
                   </Link>
                 }
 
