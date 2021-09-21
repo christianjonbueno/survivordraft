@@ -120,12 +120,23 @@ export default function SeasonDraft() {
                 <Row xs={2} md={2} className="g-4">
                 {joinedUsers.map(user => {
                   return <Col key={user.id}>
-                    <Card bg="light">
-                      <Card.Body>
-                        <Card.Text style={{ fontSize: '15px'}}>{user.username}</Card.Text>
-                        <Card.Img variant="top" src={user.photoURL} />
-                      </Card.Body>
-                    </Card>
+                    <Link
+                      style={{textDecoration: "none", color: "black"}}
+                      to={{
+                        pathname: "/userPlayers",
+                        state: {
+                          userId: user.id,
+                          username: user.username
+                        }
+                      }}
+                    >
+                      <Card bg="light">
+                        <Card.Body>
+                          <Card.Text style={{ fontSize: '15px'}}>{user.username}</Card.Text>
+                          <Card.Img variant="top" src={user.photoURL} />
+                        </Card.Body>
+                      </Card>
+                    </Link>
                   </Col>
                 })}
                 </Row>
