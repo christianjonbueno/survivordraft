@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, CardColumns, Row, Col, Container } from 'react-bootstrap';
+import { Card, Button, CardColumns, Row, Col, Container, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import firebase from '../firebase.js';
 import Chat from './Chat';
+import * as Icon from 'react-bootstrap-icons';
 
 export default function SeasonDraft() {
   const location = useLocation();
-  const { seasonNum, seasonId } = location.state;
+  const { seasonNum, seasonId, tab } = location.state;
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState('');
   const [currentDoc, setCurrentDoc] = useState('');
@@ -78,6 +79,7 @@ export default function SeasonDraft() {
     getAllUsers();
     getPlayers();
     getTribes();
+    switchTab(tab)
   }, [])
 
   return (
@@ -117,7 +119,7 @@ export default function SeasonDraft() {
             <hr />
             {switchCurrentTab === "users" ? (
               <Container>
-                <Row xs={2} md={2} className="g-4">
+                <Row xs={2} md={2} className="g-3">
                 {joinedUsers.map(user => {
                   return <Col key={user.id}>
                     <Link
@@ -125,6 +127,8 @@ export default function SeasonDraft() {
                       to={{
                         pathname: "/userPlayers",
                         state: {
+                          seasonNum,
+                          seasonId,
                           userId: user.id,
                           username: user.username
                         }
@@ -154,6 +158,7 @@ export default function SeasonDraft() {
                     pathname: "/players",
                     state: {
                       seasonNum,
+                      seasonId,
                       tribe_id: tribe.id,
                       tribe_name: tribe.tribe_name,
                       tribe_color: tribe.color,
@@ -177,10 +182,9 @@ export default function SeasonDraft() {
             ): null}
           </Card.Body>
       </Card>
-        <div className="w-100 text-center mt-2">
-          <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
-          <Button variant="link" onClick={handleLogout}>Log Out</Button>
-        </div>
+        <Navbar className="justify-content-center py-0" fixed="bottom" bg="light" style={{height: "70px", border: "1px solid lightgrey"}}>
+          <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+        </Navbar>
     </div>
   )
 }

@@ -72,11 +72,12 @@ export default function Dashboard() {
                     pathname: "/seasonDraft",
                     state: {
                       seasonNum: season.season,
-                      seasonId: season.id
+                      seasonId: season.id,
+                      tab: 'users'
                     }
                   }}
-                  className="btn btn-success w-100 mt-1"
-                  key={season.season}
+                    className="btn btn-success w-100 mt-1"
+                    key={season.season}
                   >
                   <img src={season.icon} alt="season picture"></img>
                   {' '} Season {season.season}

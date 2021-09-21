@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
-import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
 
 export default function UserPlayers() {
   const location = useLocation();
-  const { seasonNum, userId, username } = location.state;
+  const { seasonNum, seasonId, userId, username } = location.state;
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState('');
   const [currentDoc, setCurrentDoc] = useState('');
@@ -100,54 +101,69 @@ export default function UserPlayers() {
   return (
     <div>
       <Card>
-          <Card.Header><h1 className="text-center">{username}</h1></Card.Header>
-          <Card.Body>
-            <Container>
-            {!showPlayerStatus ? (
-            <Row xs={2} md={2} className="g-4">
-            {allPlayers.map(player => {
-              return <Col key={player.id}>
-                <Card 
-                  style={{backgroundColor: player.hex}}
-                  onClick={() => {
-                    showPlayer(player)
-                    showPopup()
-                  }}>
-                  <Card.Body>
-                    <Card.Text style={{ fontSize: '14px'}}>{player.name}</Card.Text>
-                    <Card.Img variant="top" src={player.img} />
-                  </Card.Body>
-                </Card>
-              </Col>
-            })}
-              </Row>
-              ):(
-              <FadeIn>
-                <Card>
-                  <Card.Body className="text">
-                    <Card.Img variant="top" src={clickedPlayer.img} />
-                    <Card.Title>{clickedPlayer.name}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{clickedPlayer.occupation}</Card.Subtitle>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem>Age: {clickedPlayer.age}</ListGroupItem>
-                      <ListGroupItem>Hometown: {clickedPlayer.location}</ListGroupItem>
-                      <ListGroupItem style={{backgroundColor: clickedPlayer.hex}}>Tribe: {clickedPlayer.tribe_name}</ListGroupItem>
-                      <ListGroupItem>Idols: {clickedPlayer.idols}</ListGroupItem>
-                    </ListGroup>
-                  </Card.Body>
-                  <Card.Footer className="text-center">
-                    <Button variant="secondary" onClick={() => showPopup()}>Close</Button>
-                  </Card.Footer>
-                </Card>
-              </FadeIn>
-              )}
-            </Container>
-          </Card.Body>
+        <Card.Header><h1 className="text-center">{username}</h1></Card.Header>
+        <Card.Body>
+          <Container>
+          {!showPlayerStatus ? (
+          <Row xs={2} md={2} className="g-4">
+          {allPlayers.map(player => {
+            return <Col key={player.id}>
+              <Card 
+                style={{backgroundColor: player.hex}}
+                onClick={() => {
+                  showPlayer(player)
+                  showPopup()
+                }}>
+                <Card.Body>
+                  <Card.Text style={{ fontSize: '13px'}}>{player.name}</Card.Text>
+                  <Card.Img variant="top" src={player.img} />
+                </Card.Body>
+              </Card>
+            </Col>
+          })}
+            </Row>
+            ):(
+            <FadeIn>
+              <Card>
+                <Card.Body className="text">
+                  <Card.Img variant="top" src={clickedPlayer.img} />
+                  <Card.Title>{clickedPlayer.name}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">{clickedPlayer.occupation}</Card.Subtitle>
+                  <ListGroup className="list-group-flush">
+                    <ListGroupItem>Age: {clickedPlayer.age}</ListGroupItem>
+                    <ListGroupItem>Hometown: {clickedPlayer.location}</ListGroupItem>
+                    <ListGroupItem style={{backgroundColor: clickedPlayer.hex}}>Tribe: {clickedPlayer.tribe_name}</ListGroupItem>
+                    <ListGroupItem>Idols: {clickedPlayer.idols}</ListGroupItem>
+                  </ListGroup>
+                </Card.Body>
+                <Card.Footer className="text-center">
+                  <Button variant="secondary" onClick={() => showPopup()}>Close</Button>
+                </Card.Footer>
+              </Card>
+            </FadeIn>
+            )}
+          </Container>
+        </Card.Body>
       </Card>
-        <div className="w-100 text-center mt-2">
-          <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
-          <Button variant="link" onClick={handleLogout}>Log Out</Button>
-        </div>
+      <div className="w-100 text-center mt-2">
+        <Navbar className="justify-content-center py-0" fixed="bottom" bg="light" style={{height: "70px", border: "1px solid lightgrey"}}>
+          <Link 
+            to={{
+              pathname: "/seasonDraft",
+              state: {
+                seasonNum,
+                seasonId,
+                tab: 'users'
+              }
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+            style={{verticalAlign: "top"}}
+          >
+            <Icon.ArrowLeftSquareFill />
+          </Link>
+          <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+        </Navbar>
+      </div>
     </div>
   )
 }

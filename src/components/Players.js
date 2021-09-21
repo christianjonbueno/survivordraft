@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
-import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
 
 export default function Players() {
@@ -108,7 +109,7 @@ export default function Players() {
                   showPopup()
                 }}>
                   <Card.Body>
-                    <Card.Text style={{ fontSize: '14px'}}>{player.name}</Card.Text>
+                    <Card.Text style={{ fontSize: '13px'}}>{player.name}</Card.Text>
                     <Card.Img variant="top" src={player.img} />
                   </Card.Body>
                 </Card>
@@ -138,8 +139,23 @@ export default function Players() {
           </Card.Body>
       </Card>
         <div className="w-100 text-center mt-2">
-          <Link to="/" className="btn btn-primary w-100 mt-3">Home</Link>
-          <Button variant="link" onClick={handleLogout}>Log Out</Button>
+        <Navbar className="justify-content-center py-0" fixed="bottom" bg="light" style={{height: "70px", border: "1px solid lightgrey"}}>
+          <Link 
+            to={{
+              pathname: "/seasonDraft",
+              state: {
+                seasonNum,
+                seasonId,
+                tab: 'tribes'
+              }
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+            style={{verticalAlign: "top"}}
+          >
+            <Icon.ArrowLeftSquareFill />
+          </Link>
+          <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+        </Navbar>
         </div>
     </div>
   )
