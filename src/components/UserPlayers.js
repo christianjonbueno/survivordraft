@@ -7,7 +7,7 @@ import firebase from '../firebase.js';
 
 export default function UserPlayers() {
   const location = useLocation();
-  const { seasonNum, seasonId, tribe_name, tribe_color, tribe_hex, userId, username } = location.state;
+  const { seasonNum, userId, username } = location.state;
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState('');
   const [currentDoc, setCurrentDoc] = useState('');
@@ -54,14 +54,23 @@ export default function UserPlayers() {
 
     allDocs.forEach(async (play) => {
       let obj = play.data();
-      if (play.tribeId === "1GHFRFEIZOCSX3jicfqp") {
-        obj.hex= "#5197A8"
+      if (obj.tribeId === "1GHFRFEIZOCSX3jicfqp") {
+        obj.tribe_name = "Luvu";
+        obj.hex = "#5197A8";
+      }
+      if (obj.tribeId === "On6FyTemeNTakwZlzYCw") {
+        obj.tribe_name = "Yase";
+        obj.hex = "#E1CC78";
+      }
+      if (obj.tribeId === "mrSd3IfaxHM7ZwNsh2zU") {
+        obj.tribe_name = "Ua";
+        obj.hex = "#85AF67";
       }
       players.push(obj);
     });
     setAllPlayers(players);
   }
-console.log(allPlayers)
+
   async function getTribes() {
     let tribes = [];
     const allDocs = await db.collection('tribes').get();
@@ -92,20 +101,20 @@ console.log(allPlayers)
     <div>
       <Card>
           <Card.Header><h1 className="text-center">{username}</h1></Card.Header>
-          <Card.Body style={{backgroundColor: tribe_hex}}>
+          <Card.Body>
             <Container>
             {!showPlayerStatus ? (
             <Row xs={2} md={2} className="g-4">
             {allPlayers.map(player => {
               return <Col key={player.id}>
                 <Card 
-                  // style={{backgroundColor: player.tribe.hex}}
+                  style={{backgroundColor: player.hex}}
                   onClick={() => {
                     showPlayer(player)
                     showPopup()
                   }}>
                   <Card.Body>
-                    <Card.Text style={{ fontSize: '12px'}}>{player.name}</Card.Text>
+                    <Card.Text style={{ fontSize: '14px'}}>{player.name}</Card.Text>
                     <Card.Img variant="top" src={player.img} />
                   </Card.Body>
                 </Card>
@@ -122,7 +131,7 @@ console.log(allPlayers)
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>Age: {clickedPlayer.age}</ListGroupItem>
                       <ListGroupItem>Hometown: {clickedPlayer.location}</ListGroupItem>
-                      {/* <ListGroupItem style={{backgroundColor: clickedPlayer.tribe.hex}}>Tribe: {clickedPlayer.tribe.tribe_name}</ListGroupItem> */}
+                      <ListGroupItem style={{backgroundColor: clickedPlayer.hex}}>Tribe: {clickedPlayer.tribe_name}</ListGroupItem>
                       <ListGroupItem>Idols: {clickedPlayer.idols}</ListGroupItem>
                     </ListGroup>
                   </Card.Body>

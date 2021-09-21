@@ -108,7 +108,7 @@ export default function Players() {
                   showPopup()
                 }}>
                   <Card.Body>
-                    <Card.Text style={{ fontSize: '12px'}}>{player.name}</Card.Text>
+                    <Card.Text style={{ fontSize: '14px'}}>{player.name}</Card.Text>
                     <Card.Img variant="top" src={player.img} />
                   </Card.Body>
                 </Card>
