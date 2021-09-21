@@ -1,53 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
-import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
+import { Card, Button, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
 
 export default function UserPlayers() {
   const location = useLocation();
   const { seasonNum, seasonId, userId, username } = location.state;
-  const { currentUser, logout } = useAuth();
-  const [error, setError] = useState('');
-  const [currentDoc, setCurrentDoc] = useState('');
-  const [joinedUsers, setJoinedUsers] = useState([]);
+  const { currentUser } = useAuth();
   const [allPlayers, setAllPlayers] = useState([]);
   const [tribes, setTribes] = useState([]);
-  const [currentTribe, setCurrentTribe] = useState('');
   const [clickedPlayer, setClickedPlayer] = useState('');
   const [showPlayerStatus, setShowPlayerStatus] = useState(false);
-  const history = useHistory();
   const db = firebase.firestore();
-
-  async function handleLogout() {
-    setError('');
-
-    try {
-      await logout();
-      history.push('/login');
-    } catch {
-      setError('Failed to log out');
-    }
-  }
-
-  async function getUser() {
-    const doc = await db.collection('users').doc(currentUser.uid).get()
-    const newData = doc.data();
-    setCurrentDoc(newData);
-  }
-
-  async function getAllUsers() {
-    let items = [];
-    const allDocs = await db.collection('users').where(`season.${seasonNum}`, '==', true).get()
-    allDocs.forEach(doc => {
-      let obj = doc.data();
-      obj.id = doc.id;
-      items.push(obj);
-    });
-    setJoinedUsers(items);
-  }
 
   async function getPlayers() {
     let players = [];
@@ -92,8 +59,6 @@ export default function UserPlayers() {
   }
 
   useEffect(() => {
-    getUser();
-    getAllUsers();
     getTribes();
     getPlayers();
   }, [])

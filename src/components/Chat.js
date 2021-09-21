@@ -6,13 +6,13 @@ import TimeAgo from 'react-timeago';
 import FadeIn from 'react-fade-in';
 
 export default function Chat() {
-  const { currentUser } = useAuth();
+  const { currentUser, saveChatHistory } = useAuth();
   const contentRef = useRef();
   const chatsRef = useRef();
   const [chats, setChats] = useState([]);
   const [writeError, setWriteError] = useState(null);
   const db = firebase.firestore();
-  console.log(chats)
+
   const chatStyle = {
     paddingLeft: '10px',
     height: '440px',
@@ -49,14 +49,15 @@ export default function Chat() {
 
   useEffect(() => {
     firebase.database().ref('chats').on('value', snapshot => {
-      let chats = [];
+      let currentChats = [];
       snapshot.forEach(snap => {
-        chats.push(snap.val());
+        currentChats.push(snap.val());
       });
-      setChats(chats);
+      setChats(currentChats);
+      saveChatHistory(currentChats);
       chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
     })
-  }, [])
+  }, [chats])
 
   return (
     <div>
@@ -70,6 +71,7 @@ export default function Chat() {
                   <img 
                     src={chat.photoURL} 
                     id="icon" 
+                    alt="profile-icon"
                     style={{width: "40px", display: "inline-block", borderRadius: "5px"}}
                   />
                 </Col>

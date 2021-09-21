@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Button, CardColumns, Row, Col, Container, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import firebase from '../firebase.js';
 import Chat from './Chat';
 import * as Icon from 'react-bootstrap-icons';
@@ -9,27 +9,14 @@ import * as Icon from 'react-bootstrap-icons';
 export default function SeasonDraft() {
   const location = useLocation();
   const { seasonNum, seasonId, tab } = location.state;
-  const { currentUser, logout } = useAuth();
-  const [error, setError] = useState('');
+  const { currentUser, getChatHistory, getCurrentChat } = useAuth();
   const [currentDoc, setCurrentDoc] = useState('');
   const [joinedUsers, setJoinedUsers] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
   const [tribes, setTribes] = useState([]);
-  const [modalShow, setModalShow] = useState(false);
   const [switchCurrentTab, setSwitchCurrentTab] = useState('users');
-  const history = useHistory();
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const db = firebase.firestore();
-
-  async function handleLogout() {
-    setError('');
-
-    try {
-      await logout();
-      history.push('/login');
-    } catch {
-      setError('Failed to log out');
-    }
-  }
 
   async function getUser() {
     const doc = await db.collection('users').doc(currentUser.uid).get()
@@ -73,13 +60,22 @@ export default function SeasonDraft() {
   function switchTab(tab) {
     setSwitchCurrentTab(tab);
   }
- 
+
+  async function compareChatHistory() {
+    let chatHistory = await getChatHistory();
+    let currentChat = await getCurrentChat();
+    // console.log("chatHistory ", chatHistory.chatHistory);
+    // console.log("currentChat", currentChat);
+    setUnreadMessages(currentChat - chatHistory);
+  }
+
   useEffect(() => {
     getUser();
     getAllUsers();
     getPlayers();
     getTribes();
-    switchTab(tab)
+    compareChatHistory();
+    switchTab(tab);
   }, [])
 
   return (
@@ -114,6 +110,7 @@ export default function SeasonDraft() {
                 >
                 Chat
                 </Button>
+                {unreadMessages ? <p style={{fontSize: "12px", marginBottom: "0px"}}>{unreadMessages} unread</p>: null}
               </Col>
             </Row>
             <hr />

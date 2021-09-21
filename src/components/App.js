@@ -12,7 +12,6 @@ import SeasonHome from './SeasonHome';
 import SeasonDraft from './SeasonDraft';
 import Players from './Players';
 import UserPlayers from './UserPlayers';
-import Users from './Users';
 import Chat from './Chat';
 
 function App() {
@@ -30,7 +29,6 @@ function App() {
                 <PrivateRoute path="/seasonHome" component={SeasonHome} />
                 <PrivateRoute path="/seasonDraft" component={SeasonDraft} />
                 <PrivateRoute path="/players" component={Players} />
-                <PrivateRoute path="/users" component={Users} />
                 <PrivateRoute path="/chat" component={Chat} />
                 <PrivateRoute path="/userPlayers" component={UserPlayers} />
                 <Route path="/signup" component={Signup} />

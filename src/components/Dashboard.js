@@ -79,7 +79,7 @@ export default function Dashboard() {
                     className="btn btn-success w-100 mt-1"
                     key={season.season}
                   >
-                  <img src={season.icon} alt="season picture"></img>
+                  <img src={season.icon} alt="season-logo"></img>
                   {' '} Season {season.season}
                   </Link>
                 }

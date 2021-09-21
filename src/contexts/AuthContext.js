@@ -122,6 +122,33 @@ export function AuthProvider({ children }) {
     await seasonDocRef.update({started: true});
   }
 
+  async function getCurrentChat() {
+    let chats = [];
+
+    await firebase.database().ref('chats').on('value', snapshot => {
+      snapshot.forEach(snap => {
+        chats.push(snap.val());
+      });
+    })
+    return chats;
+  }
+
+  async function getChatHistory() {
+    const doc = await firebase.firestore().collection('users').doc(currentUser.uid).get()
+    const user = doc.data();
+    return user;
+  }
+
+  async function saveChatHistory(chats) {
+    let currUse = firebase.auth().currentUser;
+    firebase.firestore()
+      .collection('users')
+      .doc(currUse.uid)
+      .update({
+        chatHistory: chats
+      });
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user);
@@ -142,7 +169,10 @@ export function AuthProvider({ children }) {
     updateSeasonStatus,
     beginSeason,
     updatePhoto,
-    updateUsername
+    updateUsername,
+    getChatHistory,
+    saveChatHistory,
+    getCurrentChat
   }
   return (
     <AuthContext.Provider value={value}>

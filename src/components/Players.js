@@ -1,52 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
-import { Card, Button, CardColumns, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
+import { Card, Button, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
 
 export default function Players() {
   const location = useLocation();
-  const { seasonNum, seasonId, tribe_id, tribe_name, tribe_color, tribe_hex } = location.state;
-  const { currentUser, logout } = useAuth();
-  const [error, setError] = useState('');
+  const { seasonNum, seasonId, tribe_id, tribe_name, tribe_hex } = location.state;
+  const { currentUser } = useAuth();
   const [currentDoc, setCurrentDoc] = useState('');
-  const [joinedUsers, setJoinedUsers] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
-  const [tribes, setTribes] = useState([]);
-  const [currentTribe, setCurrentTribe] = useState('');
   const [clickedPlayer, setClickedPlayer] = useState('');
   const [showPlayerStatus, setShowPlayerStatus] = useState(false);
-  const history = useHistory();
   const db = firebase.firestore();
-
-  async function handleLogout() {
-    setError('');
-
-    try {
-      await logout();
-      history.push('/login');
-    } catch {
-      setError('Failed to log out');
-    }
-  }
 
   async function getUser() {
     const doc = await db.collection('users').doc(currentUser.uid).get()
     const newData = doc.data();
     setCurrentDoc(newData);
-  }
-
-  async function getAllUsers() {
-    let items = [];
-    const allDocs = await db.collection('users').where(`season.${seasonNum}`, '==', true).get()
-    allDocs.forEach(doc => {
-      let obj = doc.data();
-      obj.id = doc.id;
-      items.push(obj);
-    });
-    setJoinedUsers(items);
   }
 
   async function getPlayers() {
@@ -62,23 +35,6 @@ export default function Players() {
     setAllPlayers(players);
   }
 
-    async function getTribes() {
-      let tribes = [];
-      const allDocs = await db.collection('tribes').get();
-      allDocs.forEach(doc => {
-        let obj = doc.data();
-        obj.id = doc.id;
-        tribes.push(obj);
-      });
-      setTribes(tribes);
-    }
-
-  async function getCurrentTribe() {
-    const doc = await db.collection('tribes').doc(tribe_id).get()
-    const newData = doc.data();
-    setCurrentTribe(newData);
-  }
-
   function showPlayer(player) {
     setClickedPlayer(player);
   }
@@ -89,9 +45,7 @@ export default function Players() {
 
   useEffect(() => {
     getUser();
-    getAllUsers();
     getPlayers();
-    getCurrentTribe();
   }, [])
 
   return (
