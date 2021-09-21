@@ -123,7 +123,7 @@ export default function UserPlayers() {
               </Row>
               ):(
               <FadeIn>
-                <Card bg="light">
+                <Card>
                   <Card.Body className="text">
                     <Card.Img variant="top" src={clickedPlayer.img} />
                     <Card.Title>{clickedPlayer.name}</Card.Title>
