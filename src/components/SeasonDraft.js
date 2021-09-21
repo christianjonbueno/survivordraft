@@ -3,6 +3,7 @@ import { Card, Button, CardColumns, Row, Col, Container } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import firebase from '../firebase.js';
+import Chat from './Chat';
 
 export default function SeasonDraft() {
   const location = useLocation();
@@ -103,6 +104,15 @@ export default function SeasonDraft() {
                 Tribes
                 </Button>
               </Col>
+              <Col>
+                <Button 
+                  size="lg" 
+                  variant="outline-secondary"
+                  onClick={() => switchTab("chat")}
+                >
+                Chat
+                </Button>
+              </Col>
             </Row>
             <hr />
             {switchCurrentTab === "users" ? (
@@ -112,7 +122,7 @@ export default function SeasonDraft() {
                   return <Col key={user.id}>
                     <Card bg="light">
                       <Card.Body>
-                        <Card.Text style={{ fontSize: '12px'}}>{user.username}</Card.Text>
+                        <Card.Text style={{ fontSize: '15px'}}>{user.username}</Card.Text>
                         <Card.Img variant="top" src={user.photoURL} />
                       </Card.Body>
                     </Card>
@@ -120,7 +130,7 @@ export default function SeasonDraft() {
                 })}
                 </Row>
               </Container>
-            ) : (
+            ) : switchCurrentTab === "tribes" ? (
               <CardColumns>
               {tribes.map(tribe => {
                 return <Card 
@@ -141,7 +151,7 @@ export default function SeasonDraft() {
                   }}
                   className="btn w-100 mt-3"
                   style={{color: "white"}}
-                  >
+                >
                   <Card.Img variant="top" src={tribe.img} />
                   <Card.Body>
                     <Card.Title>{tribe.tribe_name} Tribe</Card.Title>
@@ -151,7 +161,9 @@ export default function SeasonDraft() {
                 </Card>
               })}
               </CardColumns>
-            )}
+            ) : switchCurrentTab === "chat" ? (
+              <Chat></Chat>
+            ): null}
           </Card.Body>
       </Card>
         <div className="w-100 text-center mt-2">

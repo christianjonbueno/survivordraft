@@ -75,10 +75,42 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password);
   }
 
+  async function updatePhoto(image) {
+    const storageRef = storage.ref();
+    await storageRef.child(image.name).put(image);
+
+    storageRef.child(image.name).getDownloadURL()
+    .then(async (url) => {
+      let currUse = firebase.auth().currentUser;
+      currUse.updateProfile({
+        photoURL: url
+      })
+      firebase.firestore()
+        .collection('users')
+        .doc(currUse.uid)
+        .update({
+          photoURL: url
+        })
+      })
+  }
+
+  async function updateUsername(username) {
+    let currUse = firebase.auth().currentUser;
+    currUse.updateProfile({
+      displayName: username
+    })
+    firebase.firestore()
+      .collection('users')
+      .doc(currUse.uid)
+      .update({
+        username: username
+      })
+  }
+
   function updateSeasonStatus(seasonNum) {
     let currUse = firebase.auth().currentUser;
     firebase.firestore()
-      .collection("users")
+      .collection('users')
       .doc(currUse.uid)
       .update({
         [`season.${seasonNum}`]: true
@@ -108,7 +140,9 @@ export function AuthProvider({ children }) {
     updateEmail,
     updatePassword,
     updateSeasonStatus,
-    beginSeason
+    beginSeason,
+    updatePhoto,
+    updateUsername
   }
   return (
     <AuthContext.Provider value={value}>

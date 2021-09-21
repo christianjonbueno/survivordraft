@@ -7,13 +7,25 @@ export default function UpdateProfile() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { currentUser, updateEmail, updatePassword } = useAuth();
+  const photoURLRef = useRef();
+  const usernameRef = useRef();
+  const { currentUser, updateEmail, updatePassword, updatePhoto, updateUsername } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   
   function handleSubmit(event) {
     event.preventDefault();
+    let image;
+    let username;
+
+    if (photoURLRef.current.value) {
+      image = photoURLRef.current.files[0];
+    }
+
+    if (usernameRef.current.value) {
+      username = usernameRef.current.value;
+    }
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Passwords do not match');
@@ -28,6 +40,14 @@ export default function UpdateProfile() {
     }
     if (passwordRef.current.value) {
       promises.push(updatePassword(passwordRef.current.value));
+    }
+
+    if (image) {
+      promises.push(updatePhoto(image));
+    }
+
+    if (username) {
+      promises.push(updateUsername(username));
     }
 
     Promise.all(promises)
@@ -50,17 +70,25 @@ export default function UpdateProfile() {
           <h2 className="text-center mb-4">Update Profile</h2>
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
+            <Form.Group id="photoURL">
+              <Form.Label>Profile Pic</Form.Label>
+              <Form.File ref={photoURLRef} />
+            </Form.Group>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required defaultValue={currentUser.email} />
             </Form.Group>
+            <Form.Group id="username">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" ref={usernameRef} placeholder={`@${currentUser.displayName}`} />
+            </Form.Group>
             <Form.Group id="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} placeholder="Leave blank to keep the same"/>
+              <Form.Control type="password" ref={passwordRef} placeholder="Leave blank to keep the same" />
             </Form.Group>
             <Form.Group id="password-confirm">
               <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same"/>
+              <Form.Control type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same" />
             </Form.Group>
             <Button disabled={loading} className="w-100" type="submit">Update</Button>
           </Form>
@@ -72,3 +100,6 @@ export default function UpdateProfile() {
     </div>
   )
 }
+
+
+// https://firebasestorage.googleapis.com/v0/b/survivor-dev-5be77.appspot.com/o/IMG_6004%20(1).jpg?alt=media&token=3628d24a-c530-4ed8-a4c6-5ec48ee699c0

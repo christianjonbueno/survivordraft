@@ -12,6 +12,7 @@ import SeasonHome from './SeasonHome';
 import SeasonDraft from './SeasonDraft';
 import Players from './Players';
 import Users from './Users';
+import Chat from './Chat';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 <PrivateRoute path="/seasonDraft" component={SeasonDraft} />
                 <PrivateRoute path="/players" component={Players} />
                 <PrivateRoute path="/users" component={Users} />
+                <PrivateRoute path="/chat" component={Chat} />
                 <Route path="/signup" component={Signup} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgot-password" component={ForgotPassword} />

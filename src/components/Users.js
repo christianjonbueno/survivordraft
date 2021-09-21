@@ -83,8 +83,6 @@ export default function Users() {
 
             <CardColumns>
             {tribes.map(tribe => {
-            // return 
-            // <Card.Text className="text-center" key={player.id}>{player.name}</Card.Text>
               return <Card 
                 key={tribe.tribe_name} 
                 variant="primary"
