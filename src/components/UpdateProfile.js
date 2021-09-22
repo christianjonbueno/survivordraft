@@ -11,6 +11,7 @@ export default function UpdateProfile() {
   const usernameRef = useRef();
   const { currentUser, updateEmail, updatePassword, updatePhoto, updateUsername } = useAuth();
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   
@@ -52,13 +53,17 @@ export default function UpdateProfile() {
 
     Promise.all(promises)
       .then(() => {
-        history.push('/');
+        setMessage('Updating Profile...');
+        setTimeout(() => {
+          history.push('/');
+        }, 2500)
       })
       .catch((error) => {
         console.log(error)
-        setError('Failed to update account');
+        setError(error);
       })
       .finally(() => {
+        // setMessage('');
         setLoading(false);
       })
 
@@ -70,6 +75,7 @@ export default function UpdateProfile() {
         <Card.Body>
           <h2 className="text-center mb-4">Update Profile</h2>
           {error && <Alert variant="danger">{error.message}</Alert>}
+          {message && <Alert variant="success">{message}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="photoURL">
               <Form.Label>Profile Pic</Form.Label>
