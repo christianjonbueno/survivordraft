@@ -45,15 +45,18 @@ export default function SeasonDraft() {
   async function compareChatHistory() {
     let chatHistory = await getChatHistory();
     let currentChat = await getCurrentChat();
-    setTimeout(() => {
-      setUnreadMessages(currentChat.length - chatHistory.chatHistory.length);
-    }, 1000);
+    if (currentChat && chatHisory) {
+      setTimeout(() => {
+        console.log(currentChat, chatHistory.chatHistory)
+        // setUnreadMessages(currentChat.length - chatHistory.chatHistory.length);
+      }, 1000);
+    }
   }
 
   useEffect(() => {
     getAllUsers();
     getTribes();
-    compareChatHistory();
+    // compareChatHistory();
     switchTab(tab);
   }, [tab])
 
