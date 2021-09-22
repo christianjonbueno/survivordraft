@@ -49,15 +49,18 @@ export default function Chat() {
 
   useEffect(() => {
     firebase.database().ref('chats').on('value', snapshot => {
-      let currentChats = [];
+      let chats = [];
       snapshot.forEach(snap => {
-        currentChats.push(snap.val());
+        chats.push(snap.val());
       });
-      setChats(currentChats);
-      saveChatHistory(currentChats);
+      setChats(chats);
       chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
+      console.log(chats)
     })
-  }, [chats])
+    setTimeout(() => {
+      chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
+    }, 1000);
+  }, [])
 
   return (
     <div>
@@ -71,7 +74,6 @@ export default function Chat() {
                   <img 
                     src={chat.photoURL} 
                     id="icon" 
-                    alt="profile-icon"
                     style={{width: "40px", display: "inline-block", borderRadius: "5px"}}
                   />
                 </Col>

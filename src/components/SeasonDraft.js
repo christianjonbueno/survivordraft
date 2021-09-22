@@ -9,20 +9,12 @@ import * as Icon from 'react-bootstrap-icons';
 export default function SeasonDraft() {
   const location = useLocation();
   const { seasonNum, seasonId, tab } = location.state;
-  const { currentUser, getChatHistory, getCurrentChat } = useAuth();
-  const [currentDoc, setCurrentDoc] = useState('');
+  const { getChatHistory, getCurrentChat } = useAuth();
   const [joinedUsers, setJoinedUsers] = useState([]);
-  const [allPlayers, setAllPlayers] = useState([]);
   const [tribes, setTribes] = useState([]);
   const [switchCurrentTab, setSwitchCurrentTab] = useState('users');
   const [unreadMessages, setUnreadMessages] = useState(0);
   const db = firebase.firestore();
-
-  async function getUser() {
-    const doc = await db.collection('users').doc(currentUser.uid).get()
-    const newData = doc.data();
-    setCurrentDoc(newData);
-  }
 
   async function getAllUsers() {
     let items = [];
@@ -33,17 +25,6 @@ export default function SeasonDraft() {
       items.push(obj);
     });
     setJoinedUsers(items);
-  }
-
-  async function getPlayers() {
-    let players = [];
-    const allDocs = await db.collection('players').get();
-    allDocs.forEach(doc => {
-      let obj = doc.data();
-      obj.id = doc.id;
-      players.push(obj);
-    });
-    setAllPlayers(players);
   }
 
   async function getTribes() {
@@ -64,20 +45,24 @@ export default function SeasonDraft() {
   async function compareChatHistory() {
     let chatHistory = await getChatHistory();
     let currentChat = await getCurrentChat();
-    // console.log("chatHistory ", chatHistory.chatHistory);
-    // console.log("currentChat", currentChat);
-    setUnreadMessages(currentChat - chatHistory);
+    setTimeout(() => {
+      setUnreadMessages(currentChat.length - chatHistory.chatHistory.length);
+    }, 1000);
   }
 
   useEffect(() => {
-    getUser();
     getAllUsers();
-    getPlayers();
     getTribes();
     compareChatHistory();
     switchTab(tab);
-  }, [])
+  }, [tab])
 
+  const unreadMessageStyle = {
+    fontSize: "12px",
+    marginBottom: "0px",
+    marginLeft: "15px",
+    position: "absolute"
+  }
   return (
     <div>
       <Card>
@@ -110,7 +95,7 @@ export default function SeasonDraft() {
                 >
                 Chat
                 </Button>
-                {unreadMessages ? <p style={{fontSize: "12px", marginBottom: "0px"}}>{unreadMessages} unread</p>: null}
+                {/* {unreadMessages ? <p style={unreadMessageStyle}>{unreadMessages} unread</p>: null} */}
               </Col>
             </Row>
             <hr />

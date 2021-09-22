@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
 import { Card, Button, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
@@ -9,18 +8,10 @@ import firebase from '../firebase.js';
 export default function Players() {
   const location = useLocation();
   const { seasonNum, seasonId, tribe_id, tribe_name, tribe_hex } = location.state;
-  const { currentUser } = useAuth();
-  const [currentDoc, setCurrentDoc] = useState('');
   const [allPlayers, setAllPlayers] = useState([]);
   const [clickedPlayer, setClickedPlayer] = useState('');
   const [showPlayerStatus, setShowPlayerStatus] = useState(false);
   const db = firebase.firestore();
-
-  async function getUser() {
-    const doc = await db.collection('users').doc(currentUser.uid).get()
-    const newData = doc.data();
-    setCurrentDoc(newData);
-  }
 
   async function getPlayers() {
     let players = [];
@@ -44,7 +35,6 @@ export default function Players() {
   }
 
   useEffect(() => {
-    getUser();
     getPlayers();
   }, [])
 

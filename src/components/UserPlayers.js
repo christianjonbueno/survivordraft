@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import FadeIn from 'react-fade-in';
 import { Card, Button, Row, Col, Container, ListGroup, ListGroupItem, Navbar } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 import firebase from '../firebase.js';
@@ -9,9 +8,7 @@ import firebase from '../firebase.js';
 export default function UserPlayers() {
   const location = useLocation();
   const { seasonNum, seasonId, userId, username } = location.state;
-  const { currentUser } = useAuth();
   const [allPlayers, setAllPlayers] = useState([]);
-  const [tribes, setTribes] = useState([]);
   const [clickedPlayer, setClickedPlayer] = useState('');
   const [showPlayerStatus, setShowPlayerStatus] = useState(false);
   const db = firebase.firestore();
@@ -39,17 +36,6 @@ export default function UserPlayers() {
     setAllPlayers(players);
   }
 
-  async function getTribes() {
-    let tribes = [];
-    const allDocs = await db.collection('tribes').get();
-    allDocs.forEach(doc => {
-      let obj = doc.data();
-      obj.id = doc.id;
-      tribes.push(obj);
-    });
-    setTribes(tribes);
-  }
-
   function showPlayer(player) {
     setClickedPlayer(player);
   }
@@ -59,7 +45,6 @@ export default function UserPlayers() {
   }
 
   useEffect(() => {
-    getTribes();
     getPlayers();
   }, [])
 
