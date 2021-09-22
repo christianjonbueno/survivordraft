@@ -31,7 +31,7 @@ export default function UpdateProfile() {
       return setError('Passwords do not match');
     }
 
-    const promises = [];
+    let promises = [];
     setLoading(true);
     setError('');
     
