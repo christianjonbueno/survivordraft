@@ -69,7 +69,7 @@ export default function UpdateProfile() {
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Update Profile</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
+          {error && <Alert variant="danger">{error.message}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="photoURL">
               <Form.Label>Profile Pic</Form.Label>
