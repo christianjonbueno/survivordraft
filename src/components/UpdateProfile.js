@@ -76,7 +76,7 @@ export default function UpdateProfile() {
             </Form.Group>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required defaultValue={currentUser.email} />
+              <Form.Control type="email" ref={emailRef} placeholder={currentUser.email} />
             </Form.Group>
             <Form.Group id="username">
               <Form.Label>Username</Form.Label>
