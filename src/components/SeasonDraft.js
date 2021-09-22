@@ -45,7 +45,7 @@ export default function SeasonDraft() {
   async function compareChatHistory() {
     let chatHistory = await getChatHistory();
     let currentChat = await getCurrentChat();
-    if (currentChat && chatHisory) {
+    if (currentChat && chatHistory) {
       setTimeout(() => {
         console.log(currentChat, chatHistory.chatHistory)
         // setUnreadMessages(currentChat.length - chatHistory.chatHistory.length);
