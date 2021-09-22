@@ -54,7 +54,8 @@ export default function UpdateProfile() {
       .then(() => {
         history.push('/');
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error)
         setError('Failed to update account');
       })
       .finally(() => {
