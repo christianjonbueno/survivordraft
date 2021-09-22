@@ -47,19 +47,34 @@ export default function Chat() {
     }
   }
 
-  useEffect(() => {
+  function renderChats() {
     firebase.database().ref('chats').on('value', snapshot => {
       let chats = [];
       snapshot.forEach(snap => {
         chats.push(snap.val());
       });
       setChats(chats);
-      chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
-      console.log(chats)
     })
     setTimeout(() => {
       chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
     }, 1000);
+  }
+
+  function renderChats() {
+    firebase.database().ref('chats').on('value', snapshot => {
+      let chats = [];
+      snapshot.forEach(snap => {
+        chats.push(snap.val());
+      });
+      setChats(chats);
+    })
+    setTimeout(() => {
+      chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
+    }, 1000);
+  }
+
+  useEffect(() => {
+    renderChats();
   }, [])
 
   return (
