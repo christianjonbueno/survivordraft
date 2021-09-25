@@ -57,8 +57,8 @@ export default function UserPlayers() {
           {!showPlayerStatus ? (
           <Row xs={2} md={2} className="g-4">
           {allPlayers.map(player => {
-            return <Col key={player.id}>
-              <Card 
+            return <Col key={player.name}>
+              <Card
                 style={{backgroundColor: player.hex}}
                 onClick={() => {
                   showPlayer(player)
@@ -112,6 +112,18 @@ export default function UserPlayers() {
             <Icon.ArrowLeftSquareFill />
           </Link>
           <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+          <Link
+            to={{
+              pathname: "/stats",
+              state: {
+                seasonNum,
+                seasonId
+              }
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+          >
+            <Icon.GraphUp />
+          </Link>
         </Navbar>
       </div>
     </div>

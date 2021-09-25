@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import firebase from '../firebase.js';
 import TimeAgo from 'react-timeago';
 import FadeIn from 'react-fade-in';
+import * as Icon from 'react-bootstrap-icons';
 
 export default function Chat() {
   const { currentUser, saveChatHistory } = useAuth();
@@ -15,7 +16,7 @@ export default function Chat() {
 
   const chatStyle = {
     paddingLeft: '10px',
-    height: '440px',
+    height: '500px',
     overflowY: 'scroll',
     backgroundColor: 'lightGrey',
     textAlign: 'left',
@@ -55,31 +56,30 @@ export default function Chat() {
       });
       setChats(chats);
     })
-    setTimeout(() => {
-      chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
-    }, 1000);
-  }
 
-  function renderChats() {
-    firebase.database().ref('chats').on('value', snapshot => {
-      let chats = [];
-      snapshot.forEach(snap => {
-        chats.push(snap.val());
-      });
-      setChats(chats);
-    })
-    setTimeout(() => {
+    // setTimeout(() => {
+      if (!chatsRef.current) {
+        chatsRef.current = document.getElementsByClassName('chats');
+      }
       chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
-    }, 1000);
+    // }, 1000);
   }
 
   useEffect(() => {
-    renderChats();
+    setTimeout(() => {
+      renderChats();
+    }, 1000);
+
   }, [])
 
   return (
     <div>
       <div className="chats" style={chatStyle} ref={chatsRef}>
+        {chats.length < 1 ? (
+          <FadeIn className="justify-content-center row" style={{height: "100%"}}>
+            <Icon.ChatDots className="col-12" style={{height: "2em", verticalAlign: "middle", marginTop: "50%"}} />
+          </FadeIn>
+        ): null}
         {chats.map(chat => {
           return <div key={chat.timestamp} style={{marginBottom: "20px"}}>
             <FadeIn>

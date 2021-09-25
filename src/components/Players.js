@@ -99,6 +99,18 @@ export default function Players() {
             <Icon.ArrowLeftSquareFill />
           </Link>
           <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+          <Link
+            to={{
+              pathname: "/stats",
+              state: {
+                seasonNum,
+                seasonId
+              }
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+          >
+            <Icon.GraphUp />
+          </Link>
         </Navbar>
         </div>
     </div>

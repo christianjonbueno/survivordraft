@@ -168,7 +168,28 @@ export default function SeasonDraft() {
           </Card.Body>
       </Card>
         <Navbar className="justify-content-center py-0" fixed="bottom" bg="light" style={{height: "70px", border: "1px solid lightgrey"}}>
+          <Link 
+            to={{
+              pathname: "/"
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+            style={{verticalAlign: "top"}}
+          >
+            <Icon.ArrowLeftSquareFill />
+          </Link>
           <Link to="/" className="btn btn-outline-secondary w-25 mt-3 mb-4"><Icon.HouseDoorFill /></Link>
+          <Link
+            to={{
+              pathname: "/stats",
+              state: {
+                seasonNum,
+                seasonId
+              }
+            }}
+            className="btn btn-outline-secondary w-25 mt-3 mb-4"
+          >
+            <Icon.GraphUp />
+          </Link>
         </Navbar>
     </div>
   )
