@@ -163,7 +163,7 @@ export default function SeasonDraft() {
               })}
               </CardColumns>
             ) : switchCurrentTab === "chat" ? (
-              <Chat></Chat>
+              <Chat seasonNum={seasonNum}></Chat>
             ): null}
           </Card.Body>
       </Card>

@@ -6,11 +6,17 @@ import TimeAgo from 'react-timeago';
 import FadeIn from 'react-fade-in';
 import * as Icon from 'react-bootstrap-icons';
 
-export default function Chat() {
+export default function Chat({seasonNum}) {
   const { currentUser, saveChatHistory } = useAuth();
   const contentRef = useRef();
   const chatsRef = useRef();
+  const [inputText, setInputText] = useState('');
+  const [joinedUsers, setJoinedUsers] = useState([]);
+  const [joinedUsernames, setJoinedUsernames] = useState([]);
   const [chats, setChats] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchHovered, setSearchHovered] = useState(false);
+  const [mentioned, setMentioned] = useState({});
   const [writeError, setWriteError] = useState(null);
   const db = firebase.firestore();
 
@@ -31,9 +37,49 @@ export default function Chat() {
     marginTop: "10px"
   }
 
+  let searchResultStyle = searchHovered ? {
+    width: "75%",
+    height: "100%",
+    marginLeft: "4%",
+    marginBottom: "1rem",
+    position: "float",
+    textAlign: "left",
+    cursor: 'pointer'
+  } : {
+    width: "75%",
+    height: "100%",
+    marginLeft: "4%",
+    marginBottom: "1rem",
+    position: "float",
+    textAlign: "left"
+  }
+
+  function changeStyling() {
+    setSearchHovered(true);
+  }
+
+  async function getAllUsers() {
+    let users = [];
+    let usernames = [];
+
+    const allDocs = await db.collection('users').where(`season.${seasonNum}`, '==', true).get()
+    allDocs.forEach(doc => {
+      let obj = doc.data();
+      obj.id = doc.id;
+      users.push(obj);
+      usernames.push(obj.username);
+    });
+    setJoinedUsers(users);
+    setJoinedUsernames(usernames);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
+      if(Object.keys(mentioned).length > 0) {
+        // do code to update user's profile to add to mention array
+      }
+
       await firebase.database().ref('chats').push({
         content: contentRef.current.value,
         timestamp: Date.now(),
@@ -57,19 +103,44 @@ export default function Chat() {
       setChats(chats);
     })
 
-    // setTimeout(() => {
-      if (!chatsRef.current) {
-        chatsRef.current = document.getElementsByClassName('chats');
+    if (!chatsRef.current) {
+      chatsRef.current = document.getElementsByClassName('chats');
+    }
+    chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
+  }
+
+  function changeHandler(e) {
+    let typedText = e.target.value;
+    let currentSearch = [];
+
+    if(typedText.includes('@')) {
+      console.log('new search:')
+      for(let user of joinedUsers) {
+        if(user.username.includes(typedText.slice(typedText.indexOf('@') + 1))) {
+          currentSearch.push(user);
+          console.log(user)
+        }
       }
-      chatsRef.current.scrollTop = chatsRef.current.scrollHeight;
-    // }, 1000);
+    }
+    setSearchResults(currentSearch);
+    setInputText(typedText);
+  }
+
+  function chooseName(user) {
+    let inp = document.getElementById('message');
+    let currentInputText = inputText;
+
+    inp.value = currentInputText.slice(0, currentInputText.indexOf('@')) + '@' + user.username;
+    setInputText(inp.value);
+    setMentioned(user);
+    setSearchResults('');
   }
 
   useEffect(() => {
+    getAllUsers();
     setTimeout(() => {
       renderChats();
     }, 1000);
-
   }, [])
 
   return (
@@ -107,17 +178,28 @@ export default function Chat() {
       </div>
       <Form onSubmit={handleSubmit}>
         <Form.Group id="username">
-          <Form.Control 
-            type="text" 
-            ref={contentRef} 
-            placeholder="Say something..." 
-            required 
-            id="message" 
-            style={inputStyle}/>
+          <Form.Control
+            type="text"
+            ref={contentRef}
+            placeholder="Say something..."
+            required
+            id="message"
+            style={inputStyle}
+            onChange={(e) => changeHandler(e)}
+          />
           <Button variant="success" type="submit" id="button">Send</Button>
         </Form.Group>
       </Form>
       {writeError ? <p>{writeError}</p> : null}
+      <div className="searchResults">
+        {searchResults.length > 0 ? (
+          searchResults.map((result) => {
+            return <div style={searchResultStyle} onMouseOver={() => changeStyling()}>
+              <strong onClick={() => chooseName(result)}>@{result.username}</strong>
+              </div>
+          })
+        ):null}
+      </div>
       <div>
         Logged in as: <strong>{currentUser.displayName}</strong>
       </div>
